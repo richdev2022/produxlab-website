@@ -14,6 +14,34 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPassthroughCopy("robots.txt");
     eleventyConfig.addPassthroughCopy("sitemap.xml");
 
+    // Eleventy Filters
+    eleventyConfig.addFilter("htmlDateString", (dateObj) => {
+        return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
+    });
+
+    eleventyConfig.addFilter("truncate", (text, length) => {
+        if (text.length <= length) {
+            return text;
+        }
+        return text.substring(0, length) + "...";
+    });
+
+    // Markdown-it configuration to allow more HTML and better rendering
+    let markdownIt = require("markdown-it");
+    let markdownItAttrs = require("markdown-it-attrs"); // To add classes/ids/attrs to markdown
+    let markdownItAnchor = require("markdown-it-anchor"); // For anchor links in headings
+
+    let options = {
+        html: true,        // Enable HTML tags in markdown
+        breaks: true,      // Convert '\n' in paragraphs into <br>
+        linkify: true      // Autoconvert URL-like text to links
+    };
+    let markdownLib = markdownIt(options)
+        .use(markdownItAttrs)
+        .use(markdownItAnchor);
+
+    eleventyConfig.setLibrary("md", markdownLib);
+
     // Set custom directories for input and output
     return {
         dir: {

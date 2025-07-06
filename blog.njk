@@ -1,0 +1,21 @@
+---
+layout: layouts/base.njk # Use a basic layout for this page
+permalink: /blog/index.html # This creates the /blog/ URL
+title: Blog Posts
+---
+
+<h1>Our Latest Thoughts</h1>
+
+<div class="blog-list">
+    {% for post in collections.blog | reverse %} {# Loop through all blog posts, newest first #}
+        <article class="blog-summary">
+            <h2><a href="{{ post.url | url }}">{{ post.data.title }}</a></h2>
+            <p>Published on: {{ post.data.date | htmlDateString }} by {{ post.data.author }}</p>
+            {% if post.data.featured_image %}
+                <img src="{{ post.data.featured_image | url }}" alt="{{ post.data.title }}" style="max-width: 100%; height: auto; margin-bottom: 1em;">
+            {% endif %}
+            <p>{{ post.data.body | striptags | truncate(200) }}...</p> {# Show a snippet of the content #}
+            <p><a href="{{ post.url | url }}">Read More</a></p>
+        </article>
+    {% endfor %}
+</div>

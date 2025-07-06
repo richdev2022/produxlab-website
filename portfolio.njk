@@ -1,0 +1,21 @@
+---
+layout: layouts/base.njk # Use a basic layout for this page
+permalink: /portfolio/index.html # This creates the /portfolio/ URL
+title: Our Work
+---
+
+<h1>Our Projects</h1>
+
+<div class="portfolio-grid">
+    {% for project in collections.portfolio | reverse %} {# Loop through all portfolio projects, newest first #}
+        <article class="project-summary">
+            <h2><a href="{{ project.url | url }}">{{ project.data.title }}</a></h2>
+            <p>Client: {{ project.data.category }}</p>
+            {% if project.data.thumbnail %}
+                <img src="{{ project.data.thumbnail | url }}" alt="{{ project.data.title }}" style="max-width: 100%; height: auto; margin-bottom: 1em;">
+            {% endif %}
+            <p>{{ project.data.body | striptags | truncate(150) }}...</p> {# Show a snippet #}
+            <p><a href="{{ project.url | url }}">View Project</a></p>
+        </article>
+    {% endfor %}
+</div>
