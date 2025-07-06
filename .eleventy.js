@@ -1,4 +1,5 @@
-const { DateTime } = require("luxon");
+const { DateTime } = require("luxon"); // This line is correct and should be at the top
+
 module.exports = function(eleventyConfig) {
     // Copy main static assets directly to the output folder
     eleventyConfig.addPassthroughCopy("style.css");
@@ -18,6 +19,12 @@ module.exports = function(eleventyConfig) {
     // Eleventy Filters
     eleventyConfig.addFilter("htmlDateString", (dateObj) => {
         return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
+    });
+
+    // ADD THIS NEW 'date' FILTER:
+    eleventyConfig.addFilter("date", (dateObj, formatStr = "LLL dd, yyyy") => {
+      // Default format if none is provided
+      return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(formatStr);
     });
 
     eleventyConfig.addFilter("truncate", (text, length) => {
