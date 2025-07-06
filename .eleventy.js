@@ -21,6 +21,11 @@ module.exports = function(eleventyConfig) {
         return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
     });
 
+    // Copyright date filter
+      eleventyConfig.addFilter("currentYear", () => {
+    return DateTime.now().year;
+  });
+
     // ADD THIS NEW 'date' FILTER:
     eleventyConfig.addFilter("date", (dateObj, formatStr = "LLL dd, yyyy") => {
       // Default format if none is provided
