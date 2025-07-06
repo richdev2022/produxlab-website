@@ -1,0 +1,128 @@
+backend:
+  name: git-gateway
+  # IMPORTANT: Replace 'your-github-username/produxlab-website' with your actual GitHub username and repository name
+  repo: https://github.com/richdev2022/produxlab-website
+  branch: main # Replace with 'master' if that's your main branch name
+  squash_merges: true
+
+publish_mode: editorial_workflow
+
+media_folder: "img" # Where general uploaded images are stored (relative to project root)
+public_folder: "/img" # The base URL for general uploaded images (relative to website root)
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "blog" # This folder will be created in your project root for blog posts
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - {
+          label: "Publish Date",
+          name: "date",
+          widget: "datetime",
+          required: true,
+        }
+      - {
+          label: "Featured Image",
+          name: "featured_image",
+          widget: "image",
+          required: false,
+          media_folder: "img/blog",
+          public_folder: "/img/blog",
+        } # Sub-folder within 'img' for blog specific images
+      - {
+          label: "Author",
+          name: "author",
+          widget: "string",
+          default: "ProdUXLab Team",
+          required: true,
+        }
+      - {
+          label: "Tags",
+          name: "tags",
+          widget: "list",
+          required: false,
+          default: ["uncategorized"],
+        }
+      - { label: "Body", name: "body", widget: "markdown", required: true }
+      # --- SEO Fields for Blog Posts ---
+      - {
+          label: "SEO Title (Optional)",
+          name: "seo_title",
+          widget: "string",
+          required: false,
+          hint: "Overrides the default post title for SEO. Max 60 chars.",
+        }
+      - {
+          label: "SEO Description (Optional)",
+          name: "seo_description",
+          widget: "text",
+          required: false,
+          hint: "A concise summary for search engines. Max 160 chars.",
+        }
+      - {
+          label: "SEO Keywords (Optional)",
+          name: "seo_keywords",
+          widget: "string",
+          required: false,
+          hint: "Comma-separated list of relevant keywords.",
+        }
+
+  - name: "portfolio"
+    label: "Portfolio Projects"
+    folder: "portfolio" # This folder will be created in your project root for portfolio items
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {
+          label: "Project Title",
+          name: "title",
+          widget: "string",
+          required: true,
+        }
+      - {
+          label: "Client/Category",
+          name: "category",
+          widget: "string",
+          required: false,
+        }
+      - {
+          label: "Completion Date",
+          name: "date",
+          widget: "datetime",
+          required: true,
+        }
+      - {
+          label: "Main Image/Thumbnail",
+          name: "thumbnail",
+          widget: "image",
+          required: true,
+          media_folder: "img/portfolio",
+          public_folder: "/img/portfolio",
+        } # Sub-folder within 'img' for portfolio specific images
+      - {
+          label: "Project Overview",
+          name: "body",
+          widget: "markdown",
+          required: true,
+        }
+      - {
+          label: "Technologies Used",
+          name: "tech_stack",
+          widget: "list",
+          required: false,
+        }
+      - {
+          label: "Live Project URL",
+          name: "live_url",
+          widget: "string",
+          required: false,
+        }
+      - {
+          label: "GitHub Repo URL",
+          name: "github_url",
+          widget: "string",
+          required: false,
+        }

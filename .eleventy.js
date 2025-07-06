@@ -3,6 +3,7 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPassthroughCopy("style.css");
     eleventyConfig.addPassthroughCopy("javascript.js");
     eleventyConfig.addPassthroughCopy("img"); // This copies the entire img folder and its contents
+    eleventyConfig.addPassthroughCopy("admin");
 
     // Copy legal/utility HTML pages
     eleventyConfig.addPassthroughCopy("Terms.html");
