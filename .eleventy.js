@@ -5,6 +5,7 @@ module.exports = function(eleventyConfig) {
     eleventyConfig.addPassthroughCopy("style.css");
     eleventyConfig.addPassthroughCopy("javascript.js");
     eleventyConfig.addPassthroughCopy("img"); // This copies the entire img folder and its contents
+    eleventyConfig.addPassthroughCopy("img/blog"); // Add this line to copy the 'blog' subdirectory within 'img'
     eleventyConfig.addPassthroughCopy("admin");
 
     // Copy legal/utility HTML pages
@@ -22,14 +23,19 @@ module.exports = function(eleventyConfig) {
     });
 
     // Copyright date filter
-      eleventyConfig.addFilter("currentYear", () => {
-    return DateTime.now().year;
-  });
+    eleventyConfig.addFilter("currentYear", () => {
+        return DateTime.now().year;
+    });
 
-    // ADD THIS NEW 'date' FILTER:
-    eleventyConfig.addFilter("date", (dateObj, formatStr = "LLL dd, yyyy") => {
-      // Default format if none is provided
-      return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(formatStr);
+    // General date filter (used if you call | date('format') )
+    eleventyConfig.addFilter("date", (dateObj, formatStr = "LLL dd, yyyy") => { // Corrected default format string
+        // Default format if none is provided
+        return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(formatStr);
+    });
+
+    // ADD THIS NEW 'postDate' FILTER:
+    eleventyConfig.addFilter("postDate", (dateObj) => {
+        return DateTime.fromJSDate(dateObj, { zone: 'utc' }).toLocaleString(DateTime.DATE_FULL);
     });
 
     eleventyConfig.addFilter("truncate", (text, length) => {

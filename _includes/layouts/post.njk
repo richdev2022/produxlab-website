@@ -5,71 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
 
-    {# SEO Meta Tags (adapt for portfolio if needed, often similar to blog) #}
-    <title>{{ seo_title or title }} | ProdUXLab Portfolio</title>
-    <meta name="description" content="{{ seo_description or description or body | striptags | truncate(160) }}">
-    <meta name="keywords" content="{{ seo_keywords or tech_stack | join(', ') }}">
+    {# SEO Meta Tags #}
+    <title>{{ seo_title or title }} | Blog - ProdUXLab</title>
+    <meta name="description" content="{{ seo_description or description or content | striptags | truncate(160) }}">
+    <meta name="keywords" content="{{ seo_keywords or tags | join(', ') }}">
 
     {# Open Graph / Social Media Meta #}
     <meta property="og:title" content="{{ seo_title or title }}">
-    <meta property="og:description" content="{{ seo_description or description or body | striptags | truncate(160) }}">
-    {% if thumbnail %}
-        <meta property="og:image" content="{{ thumbnail | url }}">
+    <meta property="og:description" content="{{ seo_description or description or content | striptags | truncate(160) }}">
+    {% if image %} {# Assuming 'image' is the field for the post's featured image #}
+        <meta property="og:image" content="{{ image | url }}">
     {% endif %}
-    <meta property="og:type" content="website"> {# Or 'article' if it's a deep case study #}
+    <meta property="og:type" content="article"> {# Changed to 'article' for blog posts #}
     <meta property="og:url" content="{{ canonicalUrl or page.url | url }}">
 
     <link rel="icon" href="/img/favicon.svg">
 
+    {# Netlify Identity script for CMS preview #}
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
     <header>
-        <h1>ProdUXLab</h1>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/blog/">Blog</a>
-            <a href="/portfolio/">Portfolio</a>
+        {# You might want to include your full header content from base.njk here, or use an include #}
+        {# Example: {% include "components/header.njk" %} #}
+        <nav class="main-nav">
+            <a href="/" class="logo">ProdUX</a>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about/">About Us</a></li>
+                <li><a href="/services/">Services</a></li>
+                <li><a href="/training/">Training</a></li>
+                <li><a href="/faq/">FAQ</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/portfolio/">Portfolio</a></li>
+                <li><a href="/contact/" class="btn btn-contact">Contact Us</a></li>
+            </ul>
         </nav>
     </header>
 
-    <main>
-        <article>
-            <h1>{{ title }}</h1>
-            <p>Client: {{ category }}</p>
-            <p>Completed on: {{ date | htmlDateString }}</p>
-            {% if thumbnail %}
-                <img src="{{ thumbnail | url }}" alt="{{ title }}" style="max-width: 100%; height: auto;">
+    <main class="post-detail-page">
+        <article class="blog-post">
+            <h1 class="post-title">{{ title }}</h1>
+            <p class="post-meta">Published on {{ date | postDate }} by <span class="post-author">{{ author }}</span></p>
+
+            {# Optional: Display featured image if available #}
+            {% if image %}
+                <img src="{{ image | url }}" alt="{{ title }}" class="post-featured-image">
             {% endif %}
-            <div class="project-overview">
-                {{ body | safe }} {# This renders the Markdown content #}
+
+            <div class="post-content">
+                {{ content | safe }} {# THIS IS THE CRITICAL LINE FOR RENDERING MARKDOWN #}
             </div>
-            {% if tech_stack %}
-                <p>Technologies Used:
-                    {% for tech in tech_stack %}
-                        <span>{{ tech }}</span>{% if not loop.last %}, {% endif %}
+
+            {% if tags %}
+                <div class="post-tags">
+                    <strong>Tags:</strong>
+                    {% for tag in tags %}
+                        <a href="/tags/{{ tag | slug }}/">{{ tag }}</a>{% if not loop.last %}, {% endif %}
                     {% endfor %}
-                </p>
-            {% endif %}
-            {% if live_url %}
-                <p><a href="{{ live_url }}" target="_blank" rel="noopener noreferrer">View Live Project</a></p>
-            {% endif %}
-            {% if github_url %}
-                <p><a href="{{ github_url }}" target="_blank" rel="noopener noreferrer">View on GitHub</a></p>
+                </div>
             {% endif %}
         </article>
-        <p><a href="/portfolio/">← Back to Portfolio</a></p>
+
+        <p class="back-link"><a href="/blog/">← Back to Blog Posts</a></p>
     </main>
 
     <footer>
-        <p>&copy; {{ "now" | date("yyyy") }} ProdUXLab. All rights reserved.</p>
-        <nav>
-            <a href="/Terms.html">Terms</a> |
-            <a href="/Privacy.html">Privacy</a> |
-            <a href="/Refund.html">Refund</a>
-        </nav>
+        {# You might want to include your full footer content from base.njk here, or use an include #}
+        {# Example: {% include "components/footer.njk" %} #}
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="/img/ProdUXLab_Logo_Dark.svg" alt="ProdUXLab Logo">
+                <p>&copy; {{ "" | currentYear }} ProdUXLab. All rights reserved.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about/">About Us</a></li>
+                    <li><a href="/services/">Services</a></li>
+                    <li><a href="/training/">Training</a></li>
+                </ul>
+            </div>
+            <div class="footer-legal">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="/privacy/">Privacy Policy</a></li>
+                    <li><a href="/terms/">Terms & Conditions</a></li>
+                    <li><a href="/refund/">Refund Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://facebook.com/produxlab" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com/produxlab" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    {# Add more social links as needed #}
+                </div>
+            </div>
+        </div>
     </footer>
 
     <script src="/javascript.js"></script>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    {# This script is already in base.njk, but adding it here if post.njk is a standalone layout #}
+    {# If post.njk extends base.njk, then you don't need the whole <head> and <footer> sections, only the <main> content #}
 </body>
 </html>

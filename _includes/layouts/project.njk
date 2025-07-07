@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
 
-    {# SEO Meta Tags (adapt for portfolio if needed, often similar to blog) #}
-    <title>{{ seo_title or title }} | ProdUXLab Portfolio</title>
+    {# SEO Meta Tags #}
+    <title>{{ seo_title or title }} | Portfolio - ProdUXLab</title>
     <meta name="description" content="{{ seo_description or description or body | striptags | truncate(160) }}">
-    <meta name="keywords" content="{{ seo_keywords or tech_stack | join(', ') }}">
+    {# Prioritize seo_keywords, then tech_stack, joined by commas #}
+    <meta name="keywords" content="{{ (seo_keywords or tech_stack) | join(', ') }}">
 
     {# Open Graph / Social Media Meta #}
     <meta property="og:title" content="{{ seo_title or title }}">
@@ -16,7 +17,7 @@
     {% if thumbnail %}
         <meta property="og:image" content="{{ thumbnail | url }}">
     {% endif %}
-    <meta property="og:type" content="website"> {# Or 'article' if it's a deep case study #}
+    <meta property="og:type" content="website"> {# Retained 'website' as often portfolio items are still part of a website #}
     <meta property="og:url" content="{{ canonicalUrl or page.url | url }}">
 
     <link rel="icon" href="/img/favicon.svg">
@@ -24,52 +25,96 @@
 </head>
 <body>
     <header>
-        <h1>ProdUXLab</h1>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/blog/">Blog</a>
-            <a href="/portfolio/">Portfolio</a>
+        {# You might want to include your full header content from base.njk here, or use an include #}
+        {# Example: {% include "components/header.njk" %} #}
+        <nav class="main-nav">
+            <a href="/" class="logo">ProdUX</a>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about/">About Us</a></li>
+                <li><a href="/services/">Services</a></li>
+                <li><a href="/training/">Training</a></li>
+                <li><a href="/faq/">FAQ</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/portfolio/">Portfolio</a></li>
+                <li><a href="/contact/" class="btn btn-contact">Contact Us</a></li>
+            </ul>
         </nav>
     </header>
 
-    <main>
-        <article>
-            <h1>{{ title }}</h1>
-            <p>Client: {{ category }}</p>
-            <p>Completed on: {{ date | htmlDateString }}</p>
-            {% if thumbnail %}
-                <img src="{{ thumbnail | url }}" alt="{{ title }}" style="max-width: 100%; height: auto;">
+    <main class="project-detail-page">
+        <article class="portfolio-project">
+            <h1 class="project-title">{{ title }}</h1>
+            {% if category %}
+                <p class="project-meta">Client: <span class="project-category">{{ category }}</span></p>
             {% endif %}
+            <p class="project-meta">Completed on: <time datetime="{{ date | htmlDateString }}">{{ date | postDate }}</time></p>
+            
+            {% if thumbnail %}
+                <img src="{{ thumbnail | url }}" alt="{{ title }}" class="project-thumbnail">
+            {% endif %}
+
             <div class="project-overview">
                 {{ body | safe }} {# This renders the Markdown content #}
             </div>
+            
             {% if tech_stack %}
-                <p>Technologies Used:
+                <div class="project-tech-stack">
+                    <strong>Technologies Used:</strong>
                     {% for tech in tech_stack %}
-                        <span>{{ tech }}</span>{% if not loop.last %}, {% endif %}
+                        <span class="tech-tag">{{ tech }}</span>{% if not loop.last %}, {% endif %}
                     {% endfor %}
-                </p>
+                </div>
             {% endif %}
-            {% if live_url %}
-                <p><a href="{{ live_url }}" target="_blank" rel="noopener noreferrer">View Live Project</a></p>
-            {% endif %}
-            {% if github_url %}
-                <p><a href="{{ github_url }}" target="_blank" rel="noopener noreferrer">View on GitHub</a></p>
-            {% endif %}
+            
+            <div class="project-links">
+                {% if live_url %}
+                    <p><a href="{{ live_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-link">View Live Project</a></p>
+                {% endif %}
+                {% if github_url %}
+                    <p><a href="{{ github_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-link">View on GitHub</a></p>
+                {% endif %}
+            </div>
         </article>
-        <p><a href="/portfolio/">← Back to Portfolio</a></p>
+        <p class="back-link"><a href="/portfolio/">← Back to Portfolio</a></p>
     </main>
 
     <footer>
-        <p>&copy; {{ "now" | date("yyyy") }} ProdUXLab. All rights reserved.</p>
-        <nav>
-            <a href="/Terms.html">Terms</a> |
-            <a href="/Privacy.html">Privacy</a> |
-            <a href="/Refund.html">Refund</a>
-        </nav>
+        {# You might want to include your full footer content from base.njk here, or use an include #}
+        {# Example: {% include "components/footer.njk" %} #}
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="/img/ProdUXLab_Logo_Dark.svg" alt="ProdUXLab Logo">
+                <p>&copy; {{ "" | currentYear }} ProdUXLab. All rights reserved.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about/">About Us</a></li>
+                    <li><a href="/services/">Services</a></li>
+                    <li><a href="/training/">Training</a></li>
+                </ul>
+            </div>
+            <div class="footer-legal">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="/privacy/">Privacy Policy</a></li>
+                    <li><a href="/terms/">Terms & Conditions</a></li>
+                    <li><a href="/refund/">Refund Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://facebook.com/produxlab" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com/produxlab" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    {# Add more social links as needed #}
+                </div>
+            </div>
+        </div>
     </footer>
 
     <script src="/javascript.js"></script>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </body>
 </html>
